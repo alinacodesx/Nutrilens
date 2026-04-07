@@ -80,11 +80,11 @@ python app.py
 ---
 
 ## Screenshots
+<img width="513" height="302" alt="image" src="https://github.com/user-attachments/assets/5b03a027-8b2b-4347-88a2-0d64f5e5213e" />
+<img width="656" height="887" alt="image" src="https://github.com/user-attachments/assets/bdfb3574-cc4d-4a1f-95c0-3b12a5c0776c" />
+<img width="643" height="887" alt="image" src="https://github.com/user-attachments/assets/43b1c9eb-0a1a-42fb-bda1-bdd3400ef56a" />
+<img width="276" height="734" alt="image" src="https://github.com/user-attachments/assets/e1f9ca47-dc1b-4934-a5c0-c5a170ec7a1d" />
 
-<img width="297" height="710" alt="image" src="https://github.com/user-attachments/assets/bd28cb41-4527-4eb3-a8de-7991d92fb70b" />
-<img width="314" height="715" alt="image" src="https://github.com/user-attachments/assets/d5347b6c-82f7-4260-8e99-c2ab5b604b9f" />
-<img width="610" height="299" alt="image" src="https://github.com/user-attachments/assets/c06c7c98-6fb8-43a6-adba-547355ab71aa" />
-<img width="684" height="383" alt="image" src="https://github.com/user-attachments/assets/93306284-9de5-41e6-b7ba-d209974592c1" />
 
 
 ---
