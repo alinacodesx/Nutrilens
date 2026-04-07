@@ -1,0 +1,33 @@
+<!Doctype html>
+<html> 
+<head>
+    <title>Food Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div style="max-width:500px; margin:auto; padding:20px; background:#1e293b; border-radius:10px;">
+
+    <h2>Food Health Analyzer</h2>
+    <form method = "POST" action ="/analyze">
+        <label>Select Food:</label>
+        <select name="food">
+    <option value="maggi noodles">Maggi</option>
+    <option value="lays chips">Lays</option>
+    <option value="oreo biscuits">Oreo</option>
+    <option value="bread">Bread</option>
+    <option value="butter">Butter</option>
+    <option value="apple">Apple </option>  
+</select>
+        <br><br>
+        <label>Select Condition</label>
+        <select name="condition">
+            <option value="diabetic">Diabetic</option>
+            <option value="cholesetrol">High Cholesterol</option>
+            <option value="weight loss">Weight Loss</option>
+      </select>
+      <br><br>
+      <button type="submit">Analyze</button>
+    </form>
+   </div>
+</body>
+</html>

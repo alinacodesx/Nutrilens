@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div style="max-width:650px; margin:40px auto; padding:25px; background:#1e293b; border-radius:12px;">
+<h2 style="color:#38bdf8;">Analysis Result</h2>
+<p style="color:#94a3b8;">Personalized health insights based on your selection</p>
+<hr style="border:1px solid #334155; margin:15px 0;">
+<div class="card">
+    <h3>{{ food_data.name }}</h3>
+    <p><b>Category:</b> {{ food_data.category }}</p>
+    <p><b>Processing Level:</b> {{ food_data.processing_level }}</p>
+</div>
+
+<div class="card">
+    <h3>Ingredients:</h3>
+    <ul>
+        {% for item in food_data.ingredients %}
+            <li>{{ item.name }}</li>
+        {% endfor %}
+    </ul>
+<div class="card">
+    <h3>Nutrition (per 100g):</h3>
+    <p>Calories: {{ food_data.nutrition_per_100g.calories }}</p>
+    <p>Fat: {{ food_data.nutrition_per_100g.fat }}</p>
+    <p>Carbs: {{ food_data.nutrition_per_100g.carbs }}</p>
+    <p>Protein: {{ food_data.nutrition_per_100g.protein }}</p>
+</div>
+    <h3>Health Flags:</h3>
+    <ul>
+        {% for flag in food_data.health_flags %}
+            <li>{{ flag }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+    <!--  HEALTH BAR -->
+<div class ="card">
+    <h3>Health Score:</h3>
+
+    <div style="background:#334155; border-radius:10px; width:100%; height:20px;">
+        <div style="
+            width: {{ health_percent }}%;
+            background: {% if food_data.health_score <= 4 %}#ef4444{% elif food_data.health_score <= 7 %}#facc15{% else %}#22c55e{% endif %};
+            height: 100%;
+            border-radius:10px;
+        ">
+        </div>
+    </div>
+
+    <p>
+    {% if food_data.health_score <= 4 %}
+        Poor choice ❌
+    {% elif food_data.health_score <= 7 %}
+        Moderate ⚠️
+    {% else %}
+        Good choice ✅
+    {% endif %}
+    </p>
+
+    <p>{{ food_data.health_score }}/10</p>
+</div>
+<hr style="border:1px solid #334155; margin:15px 0;">
+<div class="card">
+    <p style="color:#fbbf24;"><b>Risk:</b> {{ food_data.risk_summary }}</p>
+
+    <p><b>Recommended Frequency:</b> {{ food_data.recommended_frequency }}</p>
+</div>
+<hr style="border:1px solid #334155; margin:15px 0;">
+<div class="card">
+    <h3>Warnings:</h3>
+    <ul>
+        {% for w in warnings %}
+            <li style="color:#f87171;">{{ w }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Suggestions:</h3>
+    <ul>
+        {% for s in suggestions %}
+            <li style="color:#4ade80;">{{ s }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+   {% if warnings|length == 0 %}
+    <p style="color:#4ade80;">✅ No major risks detected</p>
+{% endif %}
+
+    <h3>Better Alternatives:</h3>
+    <ul>
+        {% for alt in food_data.better_alternatives %}
+            <li>{{ alt }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Who Should Avoid:</h3>
+    <ul>
+        {% for person in food_data.who_should_avoid %}
+            <li>{{ person }}</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+<a href="/" class="btn">← Analyze Another Food</a>
+
+<p style="margin-top:20px; font-size:12px; color:#64748b;">
+    *This analysis is for educational purposes only
+</p>
+</div>
+
+</body>
+</html>
