@@ -92,5 +92,15 @@ if __name__ == "__main__":
     }
 
     result = get_health_verdict("Nutella", test_nutriments, "diabetic")
+    print("=== Test 1: Complete data ===")
     print("Verdict:", result.get("verdict"))
     print("Reason:", result.get("reason"))
+
+    # Guardrail test: nutrition data is empty/missing.
+    # A responsible verdict here should be "insufficient_data", NOT a
+    # confident safe/caution/avoid guess based on the model's general
+    # knowledge of what this food "probably" contains.
+    print("\n=== Test 2: Missing/empty data (guardrail test) ===")
+    result_empty = get_health_verdict("Unknown Snack", {}, "diabetic")
+    print("Verdict:", result_empty.get("verdict"))
+    print("Reason:", result_empty.get("reason"))
