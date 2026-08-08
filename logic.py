@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 from dotenv import load_dotenv
 from google import genai
@@ -57,35 +58,59 @@ def get_product_data(product_or_barcode: str) -> dict | None:
     else:
         url = "https://world.openfoodfacts.org/cgi/search.pl"
 
-    try:
-        if is_barcode:
-            res = requests.get(url, headers=HEADERS, timeout=10)
-            data = res.json()
-            if data.get("status") != 1:
-                return None
-            product = data.get("product", {})
-        else:
-            params = {
-                "search_terms": product_or_barcode,
-                "search_simple": 1,
-                "json": 1,
-                "page_size": 1,
-            }
-            res = requests.get(url, params=params, headers=HEADERS, timeout=10)
-            data = res.json()
-            products = data.get("products", [])
-            if not products:
-                return None
-            product = products[0]
+    # OFF's legacy search endpoint occasionally returns transient 503s
+    # (it's rate-limited server-side). One quick retry smooths over that.
+    for attempt in range(2):
+        try:
+            if is_barcode:
+                params = {"lc": "en"}  # ask OFF to return English text fields where available
+                res = requests.get(url, params=params, headers=HEADERS, timeout=10)
+                data = res.json()
+                if data.get("status") != 1:
+                    return None
+                product = data.get("product", {})
+            else:
+                params = {
+                    "search_terms": product_or_barcode,
+                    "search_simple": 1,
+                    "json": 1,
+                    "page_size": 5,  # fetch a few candidates instead of blindly trusting result #1
+                    "lc": "en",
+                }
+                res = requests.get(url, params=params, headers=HEADERS, timeout=10)
+                data = res.json()
+                products = data.get("products", [])
+                if not products:
+                    return None
+                product = _pick_best_match(products, product_or_barcode)
 
-        return {
-            "name": product.get("product_name") or product_or_barcode.title(),
-            "ingredients": product.get("ingredients_text", "Not specified"),
-            "nutriments": product.get("nutriments", {}),
-        }
-    except Exception as e:
-        print(f"OpenFoodFacts API error: {e}")
-        return None
+            return {
+                "name": product.get("product_name") or product_or_barcode.title(),
+                "ingredients": product.get("ingredients_text", "Not specified"),
+                "nutriments": product.get("nutriments", {}),
+            }
+        except Exception as e:
+            print(f"OpenFoodFacts API error (attempt {attempt + 1}): {e}")
+            if attempt == 0:
+                time.sleep(1.5)  # brief pause before the one retry
+            else:
+                return None
+
+
+def _pick_best_match(products: list, search_term: str) -> dict:
+    """
+    Given a few candidate products, prefer the one whose name actually
+    contains the search term -- rather than blindly trusting whichever
+    result OFF's popularity-based sort put first (which can be an
+    unrelated flavoring/variant product, as we saw with "maggi").
+    Falls back to the first result if nothing matches cleanly.
+    """
+    term = search_term.lower()
+    for product in products:
+        name = (product.get("product_name") or "").lower()
+        if term in name:
+            return product
+    return products[0]
 
 
 def get_health_verdict(product_data: dict, condition: str) -> dict:
