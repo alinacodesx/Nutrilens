@@ -6,11 +6,10 @@
 </head>
 
 <body>
-
-<div style="max-width:650px; margin:40px auto; padding:25px; background:#1e293b; border-radius:12px;">
-<h2 style="color:#38bdf8;">Analysis Result</h2>
-<p style="color:#94a3b8;">Personalized health insights based on your selection</p>
-<hr style="border:1px solid #334155; margin:15px 0;">
+<div style="max-width:650px; margin:40px auto; padding:25px; background:#141414; border-radius:12px; border:1px solid #2e2e2e;">
+<h2 style="color:#f5f5f5;">Analysis Result</h2>
+<p style="color:#b3b3b3;">Personalized health insights based on your selection</p>
+<hr style="border:1px solid #2e2e2e; margin:15px 0;">
 
 {% if not_found %}
 
@@ -18,9 +17,9 @@
     <p style="color:#f87171;">
         ❌ Couldn't find "<b>{{ searched_term }}</b>" in the OpenFoodFacts database.
     </p>
-    <p style="color:#94a3b8;">
-        Try a different spelling, a more common product name, or scan the barcode instead.
-    </p>
+    <p style="color:#b3b3b3;">
+    Try a different spelling, a more common product name, or scan the barcode instead.
+</p>
 </div>
 
 {% else %}
@@ -48,7 +47,7 @@
     {% elif verdict == "avoid" %}
         <p style="color:#f87171; font-size:20px;">❌ Avoid</p>
     {% else %}
-        <p style="color:#94a3b8; font-size:20px;">❔ Insufficient Data</p>
+       <p style="color:#b3b3b3; font-size:20px;">❔ Insufficient Data</p>
     {% endif %}
 
     <p>{{ reason }}</p>
@@ -59,7 +58,7 @@
 <br>
 <a href="/" class="btn">← Analyze Another Food</a>
 
-<p style="margin-top:20px; font-size:12px; color:#64748b;">
+<p style="margin-top:20px; font-size:12px; color:#737373;">
     *This analysis is AI-generated for educational purposes only and is not a substitute for professional medical advice.
 </p>
 </div>
