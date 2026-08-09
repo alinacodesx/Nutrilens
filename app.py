@@ -1,16 +1,23 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from logic import get_product_data, get_health_verdict
 
 app = Flask(__name__)
+app.secret_key = "dev-secret-key-change-this-later"  # needed for Flask to sign session cookies
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    # Pre-fill the condition dropdown with whatever was chosen last time, if any
+    saved_condition = session.get("condition")
+    return render_template("index.html", saved_condition=saved_condition)
 
 @app.route("/analyze", methods=["POST"])
 def analyze_food():
     food_input = request.form["food"]
     condition = request.form["condition"]
+
+    # Remember this condition for next time, so the user doesn't have to
+    # re-select it on every single search.
+    session["condition"] = condition
 
     # Step 1: fetch real nutrition data from OpenFoodFacts
     product_data = get_product_data(food_input)
