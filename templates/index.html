@@ -21,11 +21,11 @@
         <br><br>
         <label>Select Condition</label>
         <br>
-        <select name="condition">
-            <option value="diabetic">Diabetic</option>
-            <option value="high cholesterol">High Cholesterol</option>
-            <option value="weight loss">Weight Loss</option>
-        </select>
+       <select name="condition">
+    <option value="diabetic" {% if saved_condition == "diabetic" %}selected{% endif %}>Diabetic</option>
+    <option value="high cholesterol" {% if saved_condition == "high cholesterol" %}selected{% endif %}>High Cholesterol</option>
+    <option value="weight loss" {% if saved_condition == "weight loss" %}selected{% endif %}>Weight Loss</option>
+</select>
         <br><br>
         <button type="submit">Analyze</button>
     </form>
