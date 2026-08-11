@@ -1,8 +1,14 @@
+import os
 from flask import Flask, render_template, request, session
 from logic import get_product_data, get_health_verdict
 
 app = Flask(__name__)
-app.secret_key = "dev-secret-key-change-this-later"  # needed for Flask to sign session cookies
+
+# Reads FLASK_SECRET_KEY from environment if set (recommended for production --
+# set this in Render's dashboard, same way as GEMINI_API_KEY). Falls back to a
+# FIXED string, not os.urandom(), so sessions don't silently break every time
+# the free-tier instance sleeps/restarts and regenerates a random key.
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-change-this-later")
 
 @app.route("/")
 def home():
@@ -12,8 +18,17 @@ def home():
 
 @app.route("/analyze", methods=["POST"])
 def analyze_food():
-    food_input = request.form["food"]
-    condition = request.form["condition"]
+    # .get() with a default avoids a crash if "food"/"condition" are ever missing
+    # from the request (e.g. a direct API call, not just the HTML form).
+    food_input = request.form.get("food", "").strip()
+    condition = request.form.get("condition", "").strip()
+
+    if not food_input:
+        return render_template(
+            "index.html",
+            error="Please enter a food name or barcode.",
+            saved_condition=session.get("condition"),
+        )
 
     # Remember this condition for next time, so the user doesn't have to
     # re-select it on every single search.
